@@ -1,0 +1,37 @@
+# Local Python environments and dependencies
+.venv/
+venv/
+.packages/
+.qt-packages/
+
+# Python and test caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.pytest-tmp/
+.coverage*
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+.tox/
+
+# Build and packaging output
+build/
+build-debug/
+dist/
+dist-debug/
+*.egg-info/
+*.spec
+*.log
+
+# Local credentials
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+
+# User-provided architecture inputs excluded from the public repository
+/Architecture_Documentation.md
+/Architecture_View.md
+/Task1.docx
