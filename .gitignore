@@ -3,6 +3,7 @@
 venv/
 .packages/
 .qt-packages/
+.idea/
 
 # Python and test caches
 __pycache__/
