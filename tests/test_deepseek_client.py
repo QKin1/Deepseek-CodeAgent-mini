@@ -19,6 +19,8 @@ def test_client_sends_expected_responses_payload_and_extracts_text():
     response = client.create_response(instructions="test", input_items="hello", tools=[{"type": "function", "name": "x"}])
     assert recorded["auth"] == "Bearer test-key"
     assert recorded["body"]["model"] == "deepseek-v4-pro"
+    assert recorded["body"]["max_output_tokens"] == 65_536
+    assert recorded["body"]["reasoning"] == {"effort": "high"}
     assert recorded["body"]["tool_choice"] == "auto"
     assert response_text(response) == "OK"
 

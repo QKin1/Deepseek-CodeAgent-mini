@@ -8,6 +8,7 @@ import httpx
 
 API_URL = "https://api.deepseek.com/responses"
 MODEL_ID = "deepseek-v4-pro"
+DEFAULT_MAX_OUTPUT_TOKENS = 65_536
 
 
 class ProviderError(RuntimeError):
@@ -32,7 +33,7 @@ class DeepSeekResponsesClient:
         instructions: str,
         input_items: list[dict[str, Any]] | str,
         tools: list[dict[str, Any]] | None = None,
-        max_output_tokens: int = 8192,
+        max_output_tokens: int = DEFAULT_MAX_OUTPUT_TOKENS,
         reasoning_effort: str = "high",
     ) -> dict[str, Any]:
         payload: dict[str, Any] = {

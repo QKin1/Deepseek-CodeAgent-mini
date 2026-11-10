@@ -60,3 +60,25 @@ def test_duplicate_document_basenames_are_rejected(tmp_path: Path):
     second.write_text("two", encoding="utf-8")
     with pytest.raises(DocumentError, match="文件名重复"):
         parse_architecture_documents([first, second])
+
+
+def test_acceptance_fixtures_cover_consistent_and_conflicting_architectures():
+    acceptance = parse_architecture_documents([
+        ROOT / "test-fixtures" / "acceptance" / "Architecture_Documentation.md",
+        ROOT / "test-fixtures" / "acceptance" / "Architecture_View.md",
+    ])
+    assert len(acceptance["diagrams"]) == 2
+    assert acceptance["conflicts"] == []
+    assert acceptance["warnings"] == []
+
+    conflicts = parse_architecture_documents([
+        ROOT / "test-fixtures" / "conflicts" / "Architecture_Documentation_Conflict.md",
+        ROOT / "test-fixtures" / "conflicts" / "Architecture_View_Conflict.md",
+    ])
+    conflict_types = [item["type"] for item in conflicts["conflicts"]]
+    assert conflict_types.count("traceability_gap") == 1
+    assert "component_view_mismatch" in conflict_types
+    assert "artifact_name_mismatch" in conflict_types
+    assert "diagram_count_mismatch" in conflict_types
+    traceability = next(item for item in conflicts["conflicts"] if item["type"] == "traceability_gap")
+    assert traceability["requirement_ids"] == ["FR-2"]

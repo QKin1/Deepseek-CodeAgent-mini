@@ -110,14 +110,19 @@ def _requirements(documents: list[dict[str, Any]]) -> tuple[list[dict[str, Any]]
                 if in_traceability and "|" in line:
                     item["in_traceability_matrix"] = True
                     item["traceability_section"] = matrix_section
-        missing = sorted(req_id for req_id, item in found.items() if not item["in_traceability_matrix"])
-        if missing:
-            conflicts.append({
-                "type": "traceability_gap",
-                "source_file": document["name"],
-                "message": "发现正文中提及但未在需求追踪表中识别到的 ID。",
-                "requirement_ids": missing,
-            })
+    missing = sorted(req_id for req_id, item in found.items() if not item["in_traceability_matrix"])
+    if missing:
+        source_files = sorted({
+            mention["source_file"]
+            for req_id in missing
+            for mention in found[req_id]["mentions"]
+        })
+        conflicts.append({
+            "type": "traceability_gap",
+            "source_files": source_files,
+            "message": "发现正文中提及但未在需求追踪表中识别到的 ID。",
+            "requirement_ids": missing,
+        })
     return list(found.values()), conflicts
 
 
@@ -127,7 +132,7 @@ def _overview_components(documents: list[dict[str, Any]]) -> tuple[set[str], set
     for document in documents:
         text = document["text"]
         match = re.search(
-            r"(?:^|\n)\s*#{0,3}\s*(?:[A-Z]\.\s*)?(?:Architecture Overview|架构概览)(.*?)(?=\n\s*#{1,3}\s|\Z)",
+            r"(?:^|\n)\s*#{0,3}\s*(?:[A-Z0-9]+\.\s*)?(?:Architecture Overview|架构概览)(.*?)(?=\n\s*#{1,3}\s|\Z)",
             text,
             flags=re.IGNORECASE | re.DOTALL,
         )
