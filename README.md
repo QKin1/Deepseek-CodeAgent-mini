@@ -51,7 +51,6 @@ python -m pip install --target .qt-packages --no-warn-script-location "PySide6-E
 .\build.ps1
 ```
 
-发布文件位于 `dist\CodeAgent.exe`。Qt 6.8.3 是目前已完成 Windows onefile 启动验证的固定版本。构建后应在目标 Windows 环境验证启动、输入/输出路径和 Qt 插件加载；升级 Qt 版本时必须重新做同样的 EXE 冒烟验证。
 
 ## 当前限制
 
